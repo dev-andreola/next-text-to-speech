@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ElevenLabsClient } from "elevenlabs";
-import { createWriteStream, promises as fsPromises } from "fs";
-import path from "path";
 import { v4 as uuid } from "uuid";
+import { put } from "@vercel/blob";
 
 const client = new ElevenLabsClient({
   apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
@@ -18,26 +17,21 @@ export async function POST(req: NextRequest) {
       model_id: "eleven_multilingual_v2",
     });
 
-    const audioUrl = await saveAudioToPublicDir(audioStream);
+    const audioUrl = await saveAudioToBlob(audioStream);
 
     return NextResponse.json({ audioUrl });
   } catch (error) {
+    console.error(error);
     return NextResponse.error();
   }
 }
 
-async function saveAudioToPublicDir(audioStream: any): Promise<string> {
+async function saveAudioToBlob(audioStream: any): Promise<string> {
   const fileName = `${uuid()}.mp3`;
-  const filePath = path.join(process.cwd(), "public", "audio", fileName);
 
-  const fileStream = createWriteStream(filePath);
-
-  audioStream.pipe(fileStream);
-
-  await new Promise((resolve, reject) => {
-    fileStream.on("finish", resolve);
-    fileStream.on("error", reject);
+  const { url } = await put(`audio/${fileName}`, audioStream, {
+    access: "public",
   });
 
-  return `/audio/${fileName}`;
+  return url;
 }
