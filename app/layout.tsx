@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={cn("bg-zinc-200 min-h-screen p-4", inter.className)}>
-        <div className="bg-white max-w-2xl mx-auto rounded-md shadow-md overflow-hidden">
+        <div className="bg-zinc-100 max-w-2xl mx-auto rounded-md shadow-md overflow-hidden">
           {children}
         </div>
       </body>

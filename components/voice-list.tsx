@@ -16,7 +16,8 @@ import { Textarea } from "./ui/textarea";
 
 export function VoiceList() {
   const [voices, setVoices] = useState<Voice[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingVoiceId, setLoadingVoiceId] = useState<string | null>(null);
+  const [isLoadingVoices, setIsLoadingVoices] = useState(true);
   const [inputText, setInputText] = useState<string>("");
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -29,6 +30,8 @@ export function VoiceList() {
         setVoices(data.voices);
       } catch (error) {
         console.error("Failed to fetch voices:", error);
+      } finally {
+        setIsLoadingVoices(false);
       }
     }
 
@@ -57,7 +60,7 @@ export function VoiceList() {
   }
 
   async function playVoice(voice: Voice, text: string) {
-    setIsLoading(true);
+    setLoadingVoiceId(voice.voice_id);
     try {
       const response = await fetch("/api/generate-custom-audio", {
         method: "POST",
@@ -81,7 +84,7 @@ export function VoiceList() {
     } catch (error) {
       console.error("Erro ao reproduzir áudio:", error);
     } finally {
-      setIsLoading(false);
+      setLoadingVoiceId(null);
     }
   }
 
@@ -92,56 +95,71 @@ export function VoiceList() {
         onChange={(e) => setInputText(e.currentTarget.value)}
         placeholder="Digite aqui o texto que será convertido..."
       />
-      <div className="py-2 space-y-4">
-        <h2 className="font-semibold">Escolha uma das vozes:</h2>
-        {voices.map((voice) => (
-          <Card key={voice.voice_id} className=" py-2 px-4 space-y-3">
-            <CardHeader className="p-0 flex flex-col justify-start items-center">
-              <CardTitle>{voice.name}</CardTitle>
-              <CardDescription className="leading-tight	">
-                {voice.category}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="text-xs flex-1 text-muted-foreground grid grid-cols-3 gap-2">
-                {voice.labels &&
-                  Object.entries(voice.labels).map(([key, value]) => (
-                    <div
-                      key={key}
-                      className="flex border rounded-xl py-1 flex-col items-center justify-center"
+      {isLoadingVoices ? (
+        <div className="text-center h-full my-12">
+          <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
+        </div>
+      ) : (
+        <div className="py-2 space-y-6">
+          <h2 className="font-semibold mt-2">Escolha uma das vozes:</h2>
+          {voices.map((voice) => (
+            <div key={voice.voice_id}>
+              <Card className=" py-2 px-4 space-y-3">
+                <CardHeader className="p-0 flex flex-col justify-start items-center">
+                  <CardTitle>{voice.name}</CardTitle>
+                  <CardDescription className="leading-tight	">
+                    {voice.category}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="text-xs flex-1 text-muted-foreground grid grid-cols-3 gap-2">
+                    {voice.labels &&
+                      Object.entries(voice.labels).map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="flex border rounded-xl py-1 flex-col items-center justify-center"
+                        >
+                          <span className="font-semibold">{key}</span>
+                          <span>{value}</span>
+                        </div>
+                      ))}
+                    <Button
+                      onClick={() =>
+                        playPreview(voice.voice_id, voice.preview_url as string)
+                      }
+                      className="flex border rounded-xl py-1 gap-1 items-center justify-center"
                     >
-                      <span className="font-semibold">{key}</span>
-                      <span>{value}</span>
-                    </div>
-                  ))}
-                <Button
-                  onClick={() =>
-                    playPreview(voice.voice_id, voice.preview_url as string)
-                  }
-                  className="flex border rounded-xl py-1 gap-1 items-center justify-center"
-                >
-                  <p className="text-xs">Testar</p>
-                  {currentVoiceId === voice.voice_id ? (
-                    <FaPauseCircle size={16} />
-                  ) : (
-                    <FaPlayCircle size={16} />
-                  )}
-                </Button>
-              </div>
+                      <p className="text-xs">Testar</p>
+                      {currentVoiceId === voice.voice_id ? (
+                        <FaPauseCircle size={16} />
+                      ) : (
+                        <FaPlayCircle size={16} />
+                      )}
+                    </Button>
+                  </div>
 
-              <div className="py-2 px-0 space-y-2">
-                <Button
-                  onClick={() => playVoice(voice, inputText)}
-                  className="w-full gap-2"
-                >
-                  <span>Converter Texto</span>
-                  <FaPlayCircle size={22} />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  <div className="py-2 px-0 space-y-2">
+                    {inputText && (
+                      <Button
+                        disabled={loadingVoiceId !== null}
+                        onClick={() => playVoice(voice, inputText)}
+                        className="w-full gap-2"
+                      >
+                        <span>Converter Texto</span>
+                        {loadingVoiceId === voice.voice_id ? (
+                          <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
+                        ) : (
+                          <FaPlayCircle size={22} />
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
