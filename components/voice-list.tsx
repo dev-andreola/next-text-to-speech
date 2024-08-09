@@ -134,12 +134,14 @@ export function VoiceList() {
                         }
                         className="flex border rounded-xl py-1 gap-1 items-center justify-center"
                       >
-                        <p className="text-xs">Testar</p>
-                        {currentVoiceId === voice.voice_id ? (
-                          <FaPauseCircle className="flex-1" size={16} />
-                        ) : (
-                          <FaPlayCircle className="flex-1" size={16} />
-                        )}
+                        <div className="flex items-center gap-1">
+                          <p className="text-xs">Testar</p>
+                          {currentVoiceId === voice.voice_id ? (
+                            <FaPauseCircle className="flex-1" size={16} />
+                          ) : (
+                            <FaPlayCircle className="flex-1" size={16} />
+                          )}
+                        </div>
                       </Button>
                     </div>
 
