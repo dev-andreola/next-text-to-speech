@@ -1,6 +1,6 @@
 "use client";
 
-import { FaPlayCircle } from "react-icons/fa";
+import { FaPauseCircle, FaPlayCircle } from "react-icons/fa";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -11,11 +11,13 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Textarea } from "./ui/textarea";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Voice } from "elevenlabs/api";
 
 export default function VoiceList() {
   const [voices, setVoices] = useState<Voice[]>([]);
+  const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     async function fetchVoices() {
@@ -31,12 +33,24 @@ export default function VoiceList() {
     fetchVoices();
   }, []);
 
-  function playPreview(previewUrl: string) {
-    try {
+  function playPreview(voiceId: string, previewUrl: string) {
+    if (currentVoiceId === voiceId) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setCurrentVoiceId(null);
+      }
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       const audio = new Audio(previewUrl);
+      audioRef.current = audio;
       audio.play();
-    } catch (error) {
-      console.error("Erro ao reproduzir som de teste: ", error);
+      setCurrentVoiceId(voiceId);
+
+      audio.onended = () => {
+        setCurrentVoiceId(null);
+      };
     }
   }
 
@@ -66,11 +80,17 @@ export default function VoiceList() {
                     </div>
                   ))}
                 <Button
-                  onClick={() => playPreview(voice.preview_url as string)}
+                  onClick={() =>
+                    playPreview(voice.voice_id, voice.preview_url as string)
+                  }
                   className="flex border rounded-xl py-1 gap-1 items-center justify-center"
                 >
                   <p className="text-xs">Testar</p>
-                  <FaPlayCircle size={16} />
+                  {currentVoiceId === voice.voice_id ? (
+                    <FaPauseCircle size={16} />
+                  ) : (
+                    <FaPlayCircle size={16} />
+                  )}
                 </Button>
               </div>
 
