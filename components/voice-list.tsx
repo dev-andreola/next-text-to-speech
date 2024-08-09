@@ -59,8 +59,6 @@ export default function VoiceList() {
     console.log(customText);
   }
 
-  playCustomText();
-
   return (
     <div className="w-full px-2">
       <Textarea
