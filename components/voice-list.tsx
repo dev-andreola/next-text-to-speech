@@ -1,24 +1,25 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { Voice } from "elevenlabs/api";
+import { useEffect, useRef, useState } from "react";
 import { FaPauseCircle, FaPlayCircle } from "react-icons/fa";
 import { Button } from "./ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
 } from "./ui/card";
 import { Textarea } from "./ui/textarea";
-import { useEffect, useRef, useState } from "react";
-import { Voice } from "elevenlabs/api";
 
-export default function VoiceList() {
+export function VoiceList() {
   const [voices, setVoices] = useState<Voice[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [inputText, setInputText] = useState<string>("");
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [customText, setCustomText] = useState<string>("");
 
   useEffect(() => {
     async function fetchVoices() {
@@ -27,7 +28,7 @@ export default function VoiceList() {
         const data = await response.json();
         setVoices(data.voices);
       } catch (error) {
-        console.error("Falha ao buscar vozes:", error);
+        console.error("Failed to fetch voices:", error);
       }
     }
 
@@ -55,15 +56,40 @@ export default function VoiceList() {
     }
   }
 
-  function playCustomText() {
-    console.log(customText);
+  async function playVoice(voice: Voice, text: string) {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/generate-custom-audio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ voice: voice.name, text: inputText }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate audio");
+      }
+
+      const data = await response.json();
+      const audioUrl = data.audioUrl;
+
+      const audio = new Audio(audioUrl);
+      audio
+        .play()
+        .catch((error) => console.error("Erro ao tocar áudio:", error));
+    } catch (error) {
+      console.error("Erro ao reproduzir áudio:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <div className="w-full px-2">
       <Textarea
-        value={customText}
-        onChange={(e) => setCustomText(e.currentTarget.value)}
+        value={inputText}
+        onChange={(e) => setInputText(e.currentTarget.value)}
         placeholder="Digite aqui o texto que será convertido..."
       />
       <div className="py-2 space-y-4">
@@ -104,7 +130,10 @@ export default function VoiceList() {
               </div>
 
               <div className="py-2 px-0 space-y-2">
-                <Button className="w-full gap-2">
+                <Button
+                  onClick={() => playVoice(voice, inputText)}
+                  className="w-full gap-2"
+                >
                   <span>Converter Texto</span>
                   <FaPlayCircle size={22} />
                 </Button>
