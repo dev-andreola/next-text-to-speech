@@ -34,7 +34,7 @@ export default function VoiceList() {
   return (
     <div className="w-full px-2">
       <Textarea placeholder="Digite aqui o seu texto..." />
-      <div className="py-2">
+      <div className="py-2 space-y-4">
         <h2 className="font-semibold">Escolha uma das vozes:</h2>
         {voices.map((voice) => (
           <Card key={voice.voice_id} className=" py-2 px-4 space-y-3">
@@ -44,28 +44,30 @@ export default function VoiceList() {
                 {voice.category}
               </CardDescription>
             </CardHeader>
-            <div className="text-xs flex-1 text-muted-foreground grid grid-cols-3 gap-2 px-2">
-              {voice.labels &&
-                Object.entries(voice.labels).map(([key, value]) => (
-                  <div
-                    key={voice.voice_id}
-                    className="flex border roudned-sm py-1 flex-col items-center justify-center"
-                  >
-                    <span className="font-semibold">{key}</span>
-                    <span>{value}</span>
-                  </div>
-                ))}
-            </div>
+            <CardContent className="p-0">
+              <div className="text-xs flex-1 text-muted-foreground grid grid-cols-3 gap-2">
+                {voice.labels &&
+                  Object.entries(voice.labels).map(([key, value]) => (
+                    <div
+                      key={voice.voice_id}
+                      className="flex border rounded-xl py-1 flex-col items-center justify-center"
+                    >
+                      <span className="font-semibold">{key}</span>
+                      <span>{value}</span>
+                    </div>
+                  ))}
+                <Button className="flex border rounded-xl py-1 gap-1 items-center justify-center">
+                  <p className="text-xs">Testar</p>
+                  <FaPlayCircle size={16} />
+                </Button>
+              </div>
 
-            <CardContent className="py-2 px-0 space-y-2">
-              <Button variant={"outline"} className="w-full gap-2">
-                <span>Preview</span>
-                <FaPlayCircle size={22} />
-              </Button>
-              <Button className="w-full gap-2">
-                <span>Custom Text</span>
-                <FaPlayCircle size={22} />
-              </Button>
+              <div className="py-2 px-0 space-y-2">
+                <Button className="w-full gap-2">
+                  <span>Converter Texto</span>
+                  <FaPlayCircle size={22} />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
