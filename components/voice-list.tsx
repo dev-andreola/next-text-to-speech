@@ -31,6 +31,15 @@ export default function VoiceList() {
     fetchVoices();
   }, []);
 
+  function playPreview(previewUrl: string) {
+    try {
+      const audio = new Audio(previewUrl);
+      audio.play();
+    } catch (error) {
+      console.error("Erro ao reproduzir som de teste: ", error);
+    }
+  }
+
   return (
     <div className="w-full px-2">
       <Textarea placeholder="Digite aqui o seu texto..." />
@@ -56,7 +65,10 @@ export default function VoiceList() {
                       <span>{value}</span>
                     </div>
                   ))}
-                <Button className="flex border rounded-xl py-1 gap-1 items-center justify-center">
+                <Button
+                  onClick={() => playPreview(voice.preview_url as string)}
+                  className="flex border rounded-xl py-1 gap-1 items-center justify-center"
+                >
                   <p className="text-xs">Testar</p>
                   <FaPlayCircle size={16} />
                 </Button>
