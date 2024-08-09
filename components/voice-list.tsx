@@ -18,6 +18,7 @@ export default function VoiceList() {
   const [voices, setVoices] = useState<Voice[]>([]);
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [customText, setCustomText] = useState<string>("");
 
   useEffect(() => {
     async function fetchVoices() {
@@ -54,9 +55,19 @@ export default function VoiceList() {
     }
   }
 
+  function playCustomText() {
+    console.log(customText);
+  }
+
+  playCustomText();
+
   return (
     <div className="w-full px-2">
-      <Textarea placeholder="Digite aqui o seu texto..." />
+      <Textarea
+        value={customText}
+        onChange={(e) => setCustomText(e.currentTarget.value)}
+        placeholder="Digite aqui o texto que será convertido..."
+      />
       <div className="py-2 space-y-4">
         <h2 className="font-semibold">Escolha uma das vozes:</h2>
         {voices.map((voice) => (
@@ -72,7 +83,7 @@ export default function VoiceList() {
                 {voice.labels &&
                   Object.entries(voice.labels).map(([key, value]) => (
                     <div
-                      key={voice.voice_id}
+                      key={key}
                       className="flex border rounded-xl py-1 flex-col items-center justify-center"
                     >
                       <span className="font-semibold">{key}</span>
