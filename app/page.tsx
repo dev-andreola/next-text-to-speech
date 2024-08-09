@@ -16,7 +16,7 @@ export default async function Home() {
         </p>
       </div>
 
-      <div className="absolute right-3 top-3">
+      <div className="hidden sm:block absolute right-3 top-3">
         <div className="flex items-center justify-center ">
           <Link target="_blank" href={"https://github.com/dev-andreola"}>
             <Button variant={"ghost"} size={"icon"}>
@@ -40,6 +40,29 @@ export default async function Home() {
       </div>
 
       <VoiceList />
+
+      <div className="sm:hidden">
+        <div className="flex py-2 items-center justify-center ">
+          <Link target="_blank" href={"https://github.com/dev-andreola"}>
+            <Button variant={"ghost"} size={"icon"}>
+              <BsGithub size={22} />
+            </Button>
+          </Link>
+          <Link
+            target="_blank"
+            href={"https://www.linkedin.com/in/dev-andreola/"}
+          >
+            <Button variant={"ghost"} size={"icon"}>
+              <BsLinkedin size={22} />
+            </Button>
+          </Link>
+          <Link target="_blank" href={"https://vt-code.vercel.app/"}>
+            <Button variant={"ghost"} size={"icon"}>
+              <BiWorld size={22} />
+            </Button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

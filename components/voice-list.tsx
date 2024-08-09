@@ -90,7 +90,7 @@ export function VoiceList() {
   }
 
   return (
-    <div className="w-full h-full px-2">
+    <div className="w-full h-full px-2 pt-2">
       <Textarea
         value={inputText}
         onChange={(e) => setInputText(e.currentTarget.value)}
