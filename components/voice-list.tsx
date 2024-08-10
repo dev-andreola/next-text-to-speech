@@ -168,8 +168,8 @@ export function VoiceList() {
                 </div>
               ))
             ) : (
-              <div className="text-center h-full my-12">
-                Nenhuma voz encontrada.
+              <div className="text-muted-foreground">
+                Nenhuma voz encontrada com esses filtros.
               </div>
             )}
           </div>
