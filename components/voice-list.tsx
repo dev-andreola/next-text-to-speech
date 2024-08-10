@@ -1,8 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Voice } from "elevenlabs/api";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaPauseCircle, FaPlayCircle } from "react-icons/fa";
 import { Button } from "./ui/button";
 import {
@@ -15,67 +13,22 @@ import {
 import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
 import { VoiceFilter } from "./voice-filter";
+import { useVoiceFilter } from "@/app/_hooks/useVoiceFilter";
+import { Voice } from "elevenlabs/api";
 
 export function VoiceList() {
-  const [voices, setVoices] = useState<Voice[]>([]);
+  const {
+    voices,
+    isLoadingVoices,
+    setSelectedGender,
+    setSelectedAccent,
+    setSelectedUseCase,
+    setSelectedAge,
+  } = useVoiceFilter();
   const [loadingVoiceId, setLoadingVoiceId] = useState<string | null>(null);
-  const [isLoadingVoices, setIsLoadingVoices] = useState(true);
   const [inputText, setInputText] = useState<string>("");
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedGender, setSelectedGender] = useState<string>("all");
-  const [selectedAccent, setSelectedAccent] = useState<string>("all");
-  const [selectedUseCase, setSelectedUseCase] = useState<string>("all");
-  const [selectedAge, setSelectedAge] = useState<string>("all");
-
-  useEffect(() => {
-    async function fetchVoices() {
-      try {
-        const response = await fetch("/api/get-voices");
-        const data = await response.json();
-
-        let filteredVoices = data.voices;
-
-        if (selectedGender !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.gender.toLowerCase() ===
-              selectedGender.toLowerCase()
-          );
-        }
-        if (selectedAccent !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.accent.toLowerCase() ===
-              selectedAccent.toLowerCase()
-          );
-        }
-        if (selectedUseCase !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.use_case.toLowerCase() ===
-              selectedUseCase.toLowerCase()
-          );
-        }
-        if (selectedAge !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.age.toLowerCase() === selectedAge.toLowerCase()
-          );
-        }
-
-        setVoices(filteredVoices);
-      } catch (error) {
-        console.error("Failed to fetch voices:", error);
-      } finally {
-        setIsLoadingVoices(false);
-      }
-    }
-
-    fetchVoices();
-  }, [selectedGender, selectedAccent, selectedUseCase, selectedAge]);
 
   function playPreview(voiceId: string, previewUrl: string) {
     if (currentVoiceId === voiceId) {
@@ -215,9 +168,9 @@ export function VoiceList() {
                 </div>
               ))
             ) : (
-              <p className="text-muted-foreground">
-                Nenhuma voz encontrada com esses filtros.
-              </p>
+              <div className="text-center h-full my-12">
+                Nenhuma voz encontrada.
+              </div>
             )}
           </div>
         )}
