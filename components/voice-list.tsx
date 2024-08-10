@@ -30,6 +30,61 @@ export function VoiceList() {
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+<<<<<<< HEAD
+=======
+  const [selectedGender, setSelectedGender] = useState<string>("all");
+  const [selectedAccent, setSelectedAccent] = useState<string>("all");
+  const [selectedUseCase, setSelectedUseCase] = useState<string>("all");
+  const [selectedAge, setSelectedAge] = useState<string>("all");
+
+  useEffect(() => {
+    async function fetchVoices() {
+      try {
+        const response = await fetch("/api/get-voices");
+        const data = await response.json();
+
+        let filteredVoices = data.voices;
+
+        if (selectedGender !== "all") {
+          filteredVoices = filteredVoices.filter(
+            (voice: Voice) =>
+              voice.labels?.gender.toLowerCase() ===
+              selectedGender.toLowerCase()
+          );
+        }
+        if (selectedAccent !== "all") {
+          filteredVoices = filteredVoices.filter(
+            (voice: Voice) =>
+              voice.labels?.accent.toLowerCase() ===
+              selectedAccent.toLowerCase()
+          );
+        }
+        if (selectedUseCase !== "all") {
+          filteredVoices = filteredVoices.filter(
+            (voice: Voice) =>
+              voice.labels?.use_case.toLowerCase() ===
+              selectedUseCase.toLowerCase()
+          );
+        }
+        if (selectedAge !== "all") {
+          filteredVoices = filteredVoices.filter(
+            (voice: Voice) =>
+              voice.labels?.age.toLowerCase() === selectedAge.toLowerCase()
+          );
+        }
+
+        setVoices(filteredVoices);
+      } catch (error) {
+        console.error("Failed to fetch voices:", error);
+      } finally {
+        setIsLoadingVoices(false);
+      }
+    }
+
+    fetchVoices();
+  }, [selectedGender, selectedAccent, selectedUseCase, selectedAge]);
+
+>>>>>>> parent of 142a085 (feat: add category input)
   function playPreview(voiceId: string, previewUrl: string) {
     if (currentVoiceId === voiceId) {
       if (audioRef.current) {
@@ -88,7 +143,7 @@ export function VoiceList() {
         onChange={(e) => setInputText(e.currentTarget.value)}
         placeholder="Digite aqui o texto que será convertido..."
       />
-      <div className="flex flex-col sm:flex-row items-center justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="font-semibold my-4">Escolha uma das vozes:</h2>
         <VoiceFilter
           setSelectedGender={setSelectedGender}
