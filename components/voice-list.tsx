@@ -14,6 +14,7 @@ import {
 } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
+import { VoiceFilter } from "./voice-filter";
 
 export function VoiceList() {
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -97,7 +98,11 @@ export function VoiceList() {
         onChange={(e) => setInputText(e.currentTarget.value)}
         placeholder="Digite aqui o texto que será convertido..."
       />
-      <h2 className="font-semibold my-4">Escolha uma das vozes:</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold my-4">Escolha uma das vozes:</h2>
+        <VoiceFilter />
+      </div>
+
       <ScrollArea className="sm:h-[calc(100vh-15rem)] h-[calc(100vh-18rem)] w-full rounded-md border p-4">
         {isLoadingVoices ? (
           <div className="text-center h-full my-12">

@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="pt-br">
       <body
         className={cn(
-          "min-h-screen relative max-h-screen overflow-hidden",
+          "min-h-screen relative max-h-dvh overflow-hidden",
           inter.className
         )}
       >
