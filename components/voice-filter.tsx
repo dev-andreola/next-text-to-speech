@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Select,
   SelectContent,
@@ -7,10 +6,20 @@ import {
   SelectValue,
 } from "./ui/select";
 
-export function VoiceFilter() {
+export function VoiceFilter({
+  setSelectedGender,
+  setSelectedAccent,
+  setSelectedUseCase,
+  setSelectedAge,
+}: {
+  setSelectedGender: (value: string) => void;
+  setSelectedAccent: (value: string) => void;
+  setSelectedUseCase: (value: string) => void;
+  setSelectedAge: (value: string) => void;
+}) {
   return (
     <div className="flex gap-2">
-      <Select>
+      <Select onValueChange={setSelectedGender}>
         <SelectTrigger>
           <SelectValue placeholder="gender" />
         </SelectTrigger>
@@ -20,7 +29,7 @@ export function VoiceFilter() {
           <SelectItem value="female">Female</SelectItem>
         </SelectContent>
       </Select>
-      <Select>
+      <Select onValueChange={setSelectedAccent}>
         <SelectTrigger>
           <SelectValue placeholder="accent" />
         </SelectTrigger>
@@ -31,7 +40,7 @@ export function VoiceFilter() {
           <SelectItem value="australian">Australian</SelectItem>
         </SelectContent>
       </Select>
-      <Select>
+      <Select onValueChange={setSelectedUseCase}>
         <SelectTrigger>
           <SelectValue placeholder="use_case" />
         </SelectTrigger>
@@ -41,7 +50,7 @@ export function VoiceFilter() {
           <SelectItem value="conversational">Conversational</SelectItem>
         </SelectContent>
       </Select>
-      <Select>
+      <Select onValueChange={setSelectedAge}>
         <SelectTrigger>
           <SelectValue placeholder="age" />
         </SelectTrigger>
