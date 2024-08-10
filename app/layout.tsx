@@ -17,11 +17,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" className="h-dvh">
-      <body className={cn("bg-zinc-200 p-4 ", inter.className)}>
-        <div>
-          <div className="bg-zinc-100 max-w-2xl max-h-full md:max-w-4xl mx-auto rounded-md shadow-md ">
-            {children}
+    <html lang="pt-br">
+      <body
+        className={cn(
+          "min-h-screen relative max-h-screen overflow-hidden",
+          inter.className
+        )}
+      >
+        <div className="absolute top-0 left-0 w-full h-screen ">
+          <div className=" h-full overflow-hidden">
+            <div className="bg-zinc-100  max-w-2xl md:max-w-4xl mx-auto rounded-md shadow-md">
+              {children}
+            </div>
           </div>
         </div>
       </body>

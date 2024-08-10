@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default async function Home() {
   return (
-    <div className="flex relative flex-col items-center max-h-full">
+    <div className="flex relative flex-col items-center h-screen">
       <div className="py-2 flex-shrink-0 text-center border px-4 bg-white rounded-md my-2">
         <h1 className="font-bold text-xl">Text to Speech</h1>
         <p className="text-sm text-muted-foreground">
