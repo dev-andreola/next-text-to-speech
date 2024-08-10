@@ -24,6 +24,7 @@ export function VoiceList() {
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedGender, setSelectedGender] = useState<string>("all");
   const [selectedAccent, setSelectedAccent] = useState<string>("all");
   const [selectedUseCase, setSelectedUseCase] = useState<string>("all");
@@ -134,7 +135,7 @@ export function VoiceList() {
         onChange={(e) => setInputText(e.currentTarget.value)}
         placeholder="Digite aqui o texto que será convertido..."
       />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-center justify-between">
         <h2 className="font-semibold my-4">Escolha uma das vozes:</h2>
         <VoiceFilter
           setSelectedGender={setSelectedGender}

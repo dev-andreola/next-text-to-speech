@@ -18,7 +18,15 @@ export function VoiceFilter({
   setSelectedAge: (value: string) => void;
 }) {
   return (
-    <div className="flex gap-2">
+    <div className="sm:flex grid grid-cols-3 pb-2 gap-2">
+      <Select>
+        <SelectTrigger>
+          <SelectValue placeholder="category" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="premade">Premade</SelectItem>
+        </SelectContent>
+      </Select>
       <Select onValueChange={setSelectedGender}>
         <SelectTrigger>
           <SelectValue placeholder="gender" />
