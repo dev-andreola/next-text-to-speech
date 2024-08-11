@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const client = new ElevenLabsClient({
-      apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
+      apiKey: process.env.ELEVENLABS_API_KEY,
     });
 
     const voices = await client.voices.getAll();
