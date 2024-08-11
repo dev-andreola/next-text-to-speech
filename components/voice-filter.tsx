@@ -55,7 +55,7 @@ export function VoiceFilter({
   console.log(result);
 
   return (
-    <div className="grid gap-2 grid-cols-3 sm:flex">
+    <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-2">
       {Object.entries(result).map(([label, options]) => (
         <Select
           key={label}
