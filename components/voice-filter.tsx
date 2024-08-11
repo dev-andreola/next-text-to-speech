@@ -23,22 +23,19 @@ export function VoiceFilter({
 }) {
   const { voices } = useVoiceFilter();
 
-  // Função para normalizar valores
   const normalize = (value: string) => {
-    return value.toLowerCase().replace(/\s+/g, "-"); // Converte para minúsculas e substitui espaços por hífen
+    return value.toLowerCase().replace(/\s+/g, "-");
   };
 
-  // Função para extrair as labels únicas
   const labels = voices.reduce((acc, voice) => {
     const voiceLabels = voice.labels;
 
     if (voiceLabels) {
-      // Verificar se `voiceLabels` está definido
       Object.keys(voiceLabels).forEach((label) => {
         if (!acc[label]) {
-          acc[label] = new Set<string>(); // Usando Set para evitar duplicatas
+          acc[label] = new Set<string>();
         }
-        const normalizedValue = normalize(voiceLabels[label]); // Normaliza o valor
+        const normalizedValue = normalize(voiceLabels[label]);
         acc[label].add(normalizedValue);
       });
     }
@@ -46,7 +43,6 @@ export function VoiceFilter({
     return acc;
   }, {} as Record<string, Set<string>>);
 
-  // Converter os Sets para Arrays
   const result = Object.keys(labels).reduce((acc, key) => {
     acc[key] = Array.from(labels[key]);
     return acc;

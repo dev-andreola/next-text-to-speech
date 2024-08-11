@@ -86,7 +86,6 @@ export function VoiceList() {
     }
   }
 
-  // Função para verificar se o label deve ser omitido
   function shouldOmitLabel(key: string, value: string): boolean {
     return (
       (key === "gender" &&
