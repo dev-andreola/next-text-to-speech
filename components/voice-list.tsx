@@ -24,67 +24,18 @@ export function VoiceList() {
     setSelectedAccent,
     setSelectedUseCase,
     setSelectedAge,
+    setSelectedDescription,
+    selectedGender,
+    selectedAccent,
+    selectedUseCase,
+    selectedAge,
+    selectedDescription,
   } = useVoiceFilter();
   const [loadingVoiceId, setLoadingVoiceId] = useState<string | null>(null);
   const [inputText, setInputText] = useState<string>("");
   const [currentVoiceId, setCurrentVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-<<<<<<< HEAD
-=======
-  const [selectedGender, setSelectedGender] = useState<string>("all");
-  const [selectedAccent, setSelectedAccent] = useState<string>("all");
-  const [selectedUseCase, setSelectedUseCase] = useState<string>("all");
-  const [selectedAge, setSelectedAge] = useState<string>("all");
-
-  useEffect(() => {
-    async function fetchVoices() {
-      try {
-        const response = await fetch("/api/get-voices");
-        const data = await response.json();
-
-        let filteredVoices = data.voices;
-
-        if (selectedGender !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.gender.toLowerCase() ===
-              selectedGender.toLowerCase()
-          );
-        }
-        if (selectedAccent !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.accent.toLowerCase() ===
-              selectedAccent.toLowerCase()
-          );
-        }
-        if (selectedUseCase !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.use_case.toLowerCase() ===
-              selectedUseCase.toLowerCase()
-          );
-        }
-        if (selectedAge !== "all") {
-          filteredVoices = filteredVoices.filter(
-            (voice: Voice) =>
-              voice.labels?.age.toLowerCase() === selectedAge.toLowerCase()
-          );
-        }
-
-        setVoices(filteredVoices);
-      } catch (error) {
-        console.error("Failed to fetch voices:", error);
-      } finally {
-        setIsLoadingVoices(false);
-      }
-    }
-
-    fetchVoices();
-  }, [selectedGender, selectedAccent, selectedUseCase, selectedAge]);
-
->>>>>>> parent of 142a085 (feat: add category input)
   function playPreview(voiceId: string, previewUrl: string) {
     if (currentVoiceId === voiceId) {
       if (audioRef.current) {
@@ -135,6 +86,21 @@ export function VoiceList() {
     }
   }
 
+  // Função para verificar se o label deve ser omitido
+  function shouldOmitLabel(key: string, value: string): boolean {
+    return (
+      (key === "gender" &&
+        selectedGender.toLowerCase() === value.toLowerCase()) ||
+      (key === "accent" &&
+        selectedAccent.toLowerCase() === value.toLowerCase()) ||
+      (key === "use_case" &&
+        selectedUseCase.toLowerCase() === value.toLowerCase()) ||
+      (key === "age" && selectedAge.toLowerCase() === value.toLowerCase()) ||
+      (key === "description" &&
+        selectedDescription.toLowerCase() === value.toLowerCase())
+    );
+  }
+
   return (
     <div className="w-full h-full px-2 pt-2">
       <Textarea
@@ -143,13 +109,14 @@ export function VoiceList() {
         onChange={(e) => setInputText(e.currentTarget.value)}
         placeholder="Digite aqui o texto que será convertido..."
       />
-      <div className="flex items-center justify-between">
+      <div className="sm:flex items-center justify-between">
         <h2 className="font-semibold my-4">Escolha uma das vozes:</h2>
         <VoiceFilter
           setSelectedGender={setSelectedGender}
           setSelectedAccent={setSelectedAccent}
           setSelectedUseCase={setSelectedUseCase}
           setSelectedAge={setSelectedAge}
+          setSelectedDescription={setSelectedDescription}
         />
       </div>
 
@@ -173,15 +140,17 @@ export function VoiceList() {
                     <CardContent className="p-0">
                       <div className="text-xs flex-1 text-muted-foreground grid grid-cols-3 gap-2">
                         {voice.labels &&
-                          Object.entries(voice.labels).map(([key, value]) => (
-                            <div
-                              key={key}
-                              className="flex border rounded-xl py-1 flex-col items-center justify-center"
-                            >
-                              <span className="font-semibold">{key}</span>
-                              <span>{value}</span>
-                            </div>
-                          ))}
+                          Object.entries(voice.labels).map(([key, value]) =>
+                            shouldOmitLabel(key, value as string) ? null : (
+                              <div
+                                key={key}
+                                className="flex border rounded-xl py-1 flex-col items-center justify-center"
+                              >
+                                <span className="font-semibold">{key}</span>
+                                <span>{value}</span>
+                              </div>
+                            )
+                          )}
                         <Button
                           onClick={() =>
                             playPreview(

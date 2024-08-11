@@ -8,6 +8,7 @@ export function useVoiceFilter() {
   const [selectedAccent, setSelectedAccent] = useState<string>("all");
   const [selectedUseCase, setSelectedUseCase] = useState<string>("all");
   const [selectedAge, setSelectedAge] = useState<string>("all");
+  const [selectedDescription, setSelectedDescription] = useState<string>("all");
 
   useEffect(() => {
     async function fetchVoices() {
@@ -45,6 +46,14 @@ export function useVoiceFilter() {
           );
         }
 
+        if (selectedDescription !== "all") {
+          filteredVoices = filteredVoices.filter(
+            (voice: Voice) =>
+              voice.labels?.description.toLowerCase() ===
+              selectedDescription.toLowerCase()
+          );
+        }
+
         setVoices(filteredVoices);
       } catch (error) {
         console.error("Failed to fetch voices:", error);
@@ -54,14 +63,26 @@ export function useVoiceFilter() {
     }
 
     fetchVoices();
-  }, [selectedGender, selectedAccent, selectedUseCase, selectedAge]);
+  }, [
+    selectedGender,
+    selectedAccent,
+    selectedUseCase,
+    selectedAge,
+    selectedDescription,
+  ]);
 
   return {
     voices,
     isLoadingVoices,
+    selectedGender,
+    selectedAccent,
+    selectedUseCase,
+    selectedAge,
+    selectedDescription,
     setSelectedGender,
     setSelectedAccent,
     setSelectedUseCase,
     setSelectedAge,
+    setSelectedDescription,
   };
 }

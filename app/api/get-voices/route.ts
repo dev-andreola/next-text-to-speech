@@ -9,8 +9,6 @@ export async function GET() {
 
     const voices = await client.voices.getAll();
 
-    console.log(voices.voices[0].labels);
-
     return NextResponse.json(voices);
   } catch (error) {
     return NextResponse.json(
