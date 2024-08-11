@@ -81,17 +81,20 @@ export function VoiceFilter({
             }
           }}
         >
-          <SelectTrigger>
-            <SelectValue placeholder={label} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos</SelectItem>
-            {options.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
+          <div className="flex flex-col py-1">
+            <span className="py-1 text-xs">{label}:</span>
+            <SelectTrigger>
+              <SelectValue placeholder={"Todos"} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              {options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </div>
         </Select>
       ))}
     </div>
